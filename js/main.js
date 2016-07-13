@@ -111,19 +111,4 @@ $(function(){
 
     });
 
-
-/*
-
-      if($('#password').val() == $('#repeat-pass').val()){
-        document.getElementById('repeat-pass').setCustomValidity('');
-
-      }else{
-        document.getElementById('repeat-pass').setCustomValidity("Not equal");
-      }
-    }else{
-      alert("Not checked");
-    }
-    event.preventDefault();
-*/
-
 });
