@@ -20,6 +20,7 @@ $(function(){
     event.preventDefault();
     $('#host-event')[0].reset();
     $('.created').show();
+    alert("Event added successfully!");
   });
 
   function issueTracker(){
@@ -73,6 +74,7 @@ $(function(){
         event.preventDefault();
         $('.crea').show();
         $('#create-ac')[0].reset();
+        alert("Account created successfully!");
       }
 
       function checkReq() {
