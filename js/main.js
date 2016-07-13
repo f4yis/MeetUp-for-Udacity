@@ -1,5 +1,4 @@
 $('.created').hide();
-$('.mess').hide();
 $('.crea').hide();
 $(function(){
 
@@ -23,32 +22,92 @@ $(function(){
     $('.created').show();
   });
 
-  $('#create-ac').submit(function(event){
-    event.preventDefault();
-    if($('#agree').is(':checked')){
-      $('.crea').hide();
-      if ($('#password').val() != $('#rpass').val()){
-        $('.mess').html("Passwords should be same");
-        $('.mess').show();
-      }else{
-        $('.mess').hide();
-        var pass = $('#password').val();
-        console.log(pass.length);
-        if(pass.length <8){
+  function issueTracker(){
+      this.issues = [];
+    }
+    issueTracker.prototype =  {
+      add : function(issue){
+        this.issues.push(issue);
+      },
 
-          $('.mess').html("Passwords should have atleast 8 char");
-          $('.mess').show();
-        }else{
-          $('.mess').hide();
-          $('.crea').show();
-          $('#create-ac')[0].reset();
+      retrieve : function() {
+        var message = "";
+        switch (this.issues.length) {
+          case 0:
+            break;
+          case 1:
+            message = this.issues[0];
+            break;
+          default:
+            message = "Please solve the following issues : \n" + this.issues.join("\n");
+        }
+        return message;
+      }
+    }
+
+    var first = document.getElementById('password');
+    var second = document.getElementById('rpass');
+
+    var pf = first.value;
+    var ps = first.value;
+
+    $('#submit').click(function(event){
+      $('.crea').hide();
+      pf = first.value;
+      ps = second.value;
+
+      var isf = new issueTracker();
+      var iss = new issueTracker();
+      if ((pf === ps) && (pf.length > 0)){
+        checkReq();
+      }else{
+        iss.add("Passwords must match!");
+      }
+
+      fmes = isf.retrieve();
+      smes = iss.retrieve();
+
+      first.setCustomValidity(fmes);
+      second.setCustomValidity(smes);
+      if(fmes.length + smes.length === 0){
+        event.preventDefault();
+        $('.crea').show();
+        $('#create-ac')[0].reset();
+      }
+
+      function checkReq() {
+
+        if(pf.length < 8){
+          isf.add("Password Length is too short (atlease 8)");
+        }else if(pf.length > 20){
+          isf.add("Password Length is too long (max 20)");
+        }
+        if (!pf.match(/[\!\@\#\$\%\^\&\*]/g)) {
+          isf.add("missing a symbol (!, @, #, $, %, ^, &, *)");
+        }
+
+        if (!pf.match(/\d/g)) {
+          isf.add("missing a number");
+        }
+
+        if (!pf.match(/[a-z]/g)) {
+          isf.add("missing a lowercase letter");
+        }
+
+        if (!pf.match(/[A-Z]/g)) {
+          isf.add("missing an uppercase letter");
+        }
+
+        var illegalCharacterGroup = pf.match(/[^A-z0-9\!\@\#\$\%\^\&\*]/g)
+        if (illegalCharacterGroup) {
+          illegalCharacterGroup.forEach(function (illegalChar) {
+            isf.add("includes illegal character: " + illegalChar);
+          });
         }
       }
-    }else{
-      $('.crea').hide();
-      $('.mess').html("Please agree the terms and condition");
-      $('.mess').show();
-    }
+
+
+    });
 
 
 /*
@@ -64,6 +123,5 @@ $(function(){
     }
     event.preventDefault();
 */
-  });
 
 });
